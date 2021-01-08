@@ -33,16 +33,20 @@
   width: fit-content;
   background-color: #ffffff;
   margin-bottom: 30px;
+  max-width: 300px;
+  word-break: break-all;
 }
 
 .chat__reciever {
   margin-left: auto;
   background-color: #dcf8c6;
+  display: flow-root;
 }
 
 .chat__timestamp {
   margin-left: 10px;
   font-size: xx-small;
+  float: right;
 }
 
 .chat__name {
@@ -64,7 +68,7 @@
   background-repeat: repeat;
   background-position: center;
   padding: 30px;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 .chat__footer {
@@ -94,4 +98,8 @@
 .chat__footer > .MuiSvgIcon-root {
   padding: 10px;
   color: gray;
+}
+
+.chat__message > .chat__timestamp {
+  text-align: center;
 }
