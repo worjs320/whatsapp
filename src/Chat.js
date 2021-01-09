@@ -31,6 +31,7 @@ function Chat() {
           setMessages(snapshot.docs.map((doc) => doc.data()))
         );
     }
+    scrollDown();
   }, [roomId]);
 
   useEffect(() => {
@@ -47,6 +48,12 @@ function Chat() {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
     setInput("");
+    scrollDown();
+  };
+
+  const scrollDown = () => {
+    const objDiv = document.getElementById("chat__body");
+    setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 10);
   };
 
   return (
@@ -75,7 +82,7 @@ function Chat() {
         </div>
       </div>
 
-      <div className="chat__body">
+      <div id="chat__body" className="chat__body">
         {messages.map((message) => (
           <p
             className={`chat__message ${
