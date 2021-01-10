@@ -122,6 +122,7 @@
   font-size: xx-small;
   position: absolute;
   margin-right: -50px;
+  bottom: -8px;
 }
 
 .chat__subarea {
