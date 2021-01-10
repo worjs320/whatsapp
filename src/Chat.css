@@ -57,6 +57,8 @@
   margin-left: 10px;
   font-size: xx-small;
   float: right;
+  line-height: 9px;
+  bottom: -13px;
 }
 
 .chat__name {
@@ -77,8 +79,9 @@
   background-image: url("./img/chat-bg.png");
   background-repeat: repeat;
   background-position: center;
-  padding: 30px;
+  padding: 30px 35px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .chat__footer {
@@ -112,4 +115,16 @@
 
 .chat__message > .chat__timestamp {
   text-align: center;
+}
+
+.chat__deleteButton {
+  margin-left: 10px;
+  font-size: xx-small;
+  position: absolute;
+  margin-right: -50px;
+}
+
+.chat__subarea {
+  display: flex;
+  flex-direction: row-reverse;
 }

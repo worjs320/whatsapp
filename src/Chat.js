@@ -1,5 +1,10 @@
 import { Avatar, IconButton } from "@material-ui/core";
-import { AttachFile, MoreVert, SearchOutlined } from "@material-ui/icons";
+import {
+  AttachFile,
+  MoreVert,
+  SearchOutlined,
+  HighlightOff,
+} from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
@@ -28,7 +33,9 @@ function Chat() {
         .collection("messages")
         .orderBy("timestamp", "asc")
         .onSnapshot((snapshot) =>
-          setMessages(snapshot.docs.map((doc) => doc.data()))
+          setMessages(
+            snapshot.docs.map((doc) => ({ data: doc.data(), id: doc.id }))
+          )
         );
     }
     scrollDown();
@@ -51,9 +58,18 @@ function Chat() {
     scrollDown();
   };
 
+  const deleteMessage = (e) => {
+    console.log(e);
+    try {
+      db.collection("rooms").doc(roomId).collection("messages").doc(e).delete();
+    } catch {
+      alert("delete Error");
+    }
+  };
+
   const scrollDown = () => {
     const objDiv = document.getElementById("chat__body");
-    setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 10);
+    setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 100);
   };
 
   return (
@@ -65,7 +81,7 @@ function Chat() {
           <p>
             Last seen{" "}
             {new Date(
-              messages[messages.length - 1]?.timestamp?.toDate()
+              messages[messages.length - 1]?.data?.timestamp?.toDate()
             ).toLocaleString()}
           </p>
         </div>
@@ -84,18 +100,30 @@ function Chat() {
 
       <div id="chat__body" className="chat__body">
         {messages.map((message) => (
-          <p
-            className={`chat__message ${
-              message.name == user.displayName && "chat__reciever"
-            }`}
-          >
-            <span className="chat__name">{message.name}</span>
-            {message.message}
-            <span className="chat__timestamp">
-              <br />
-              {new Date(message.timestamp?.toDate()).toLocaleString()}
-            </span>
-          </p>
+          <>
+            <div
+              className={`chat__message ${
+                message.data.name == user.displayName && "chat__reciever"
+              }`}
+            >
+              <span className="chat__name">{message.data.name}</span>
+              {message.data.message}
+              <span className="chat__subarea">
+                <span className="chat__timestamp">
+                  <br />
+                  {new Date(message.data.timestamp?.toDate()).toLocaleString()}
+                </span>
+                <span className="chat__deleteButton">
+                  <IconButton onClick={() => deleteMessage(message.id)}>
+                    <HighlightOff
+                      onClick={() => deleteMessage(message.id)}
+                      style={{ fontSize: 20, color: "#D11A2A" }}
+                    />
+                  </IconButton>
+                </span>
+              </span>
+            </div>
+          </>
         ))}
       </div>
 
