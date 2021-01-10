@@ -32,11 +32,12 @@ function Chat() {
         .doc(roomId)
         .collection("messages")
         .orderBy("timestamp", "asc")
-        .onSnapshot((snapshot) =>
+        .onSnapshot(function (snapshot) {
           setMessages(
             snapshot.docs.map((doc) => ({ data: doc.data(), id: doc.id }))
-          )
-        );
+          );
+          scrollDown();
+        });
     }
     scrollDown();
   }, [roomId]);
@@ -59,7 +60,6 @@ function Chat() {
   };
 
   const deleteMessage = (e) => {
-    console.log(e);
     try {
       db.collection("rooms").doc(roomId).collection("messages").doc(e).delete();
     } catch {
@@ -69,7 +69,7 @@ function Chat() {
 
   const scrollDown = () => {
     const objDiv = document.getElementById("chat__body");
-    setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 100);
+    setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 500);
   };
 
   return (
