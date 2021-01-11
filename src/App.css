@@ -2,7 +2,8 @@
   display: grid;
   place-items: center;
   background-color: #dadbd3;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
 }
 
 .app__body {
@@ -11,4 +12,20 @@
   height: 90vh;
   width: 90vw;
   box-shadow: -1px 4px 20px -6px rgba(0, 0, 0, 0.75);
+}
+
+.MuiAvatar-root {
+  align-self: center;
+}
+
+@media screen and (max-width: 850px) {
+  .app__body {
+    flex-direction: column;
+    height: 100%;
+    width: 80vw;
+  }
+
+  .app {
+    padding: 30px;
+  }
 }

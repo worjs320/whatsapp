@@ -28,7 +28,7 @@ function Login() {
           alt=""
         />
         <div className="login__text">
-          <h1>Sign in to WahtsApp</h1>
+          <h1>Sign in to WhatsApp</h1>
         </div>
         <Button type="submit" onClick={signIn}>
           Sign In With Google

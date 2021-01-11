@@ -55,3 +55,19 @@
   background-color: white;
   overflow: auto;
 }
+
+.sidebar__profile {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar__profile > p {
+  font-weight: bold;
+  font-size: 22px;
+  margin-left: 5px;
+}
+
+.MuiIconButton-root {
+  padding: 10px;
+}
