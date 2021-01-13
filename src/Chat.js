@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import db from "./firebase";
 import firebase from "firebase";
 import { useStateValue } from "./StateProvider";
+import { useHistory } from 'react-router-dom';
 
 function Chat() {
   const [{ user }, dispatch] = useStateValue();
@@ -49,6 +50,7 @@ function Chat() {
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed >>>", input);
+    if (input == '') return;
 
     db.collection("rooms").doc(roomId).collection("messages").add({
       name: user.displayName,
@@ -67,6 +69,17 @@ function Chat() {
     }
   };
 
+  const history = useHistory();
+  const deleteRoom = () => {
+    try {
+      db.collection("rooms").doc(roomId).delete();
+      history.push("/");
+      roomId = false;
+    } catch {
+      alert("delete Error");
+    }
+  };
+
   const scrollDown = () => {
     const objDiv = document.getElementById("chat__body");
     setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 500);
@@ -77,7 +90,13 @@ function Chat() {
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
-          <h3>{roomName}</h3>
+          <h2 style={{ display: "inline" }}>{roomName}</h2>
+          <span style={{ marginLeft: "10px" }}>
+            <HighlightOff
+              onClick={() => deleteRoom()}
+              style={{ fontSize: 20, color: "#D11A2A" }}
+            />
+          </span>
           <p>
             Last seen{" "}
             {new Date(
@@ -102,9 +121,8 @@ function Chat() {
         {messages.map((message) => (
           <>
             <div
-              className={`chat__message ${
-                message.data.name == user.displayName && "chat__reciever"
-              }`}
+              className={`chat__message ${message.data.name == user.displayName && "chat__reciever"
+                }`}
             >
               <span className="chat__name">{message.data.name}</span>
               {message.data.message}
