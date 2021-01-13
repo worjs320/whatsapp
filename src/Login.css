@@ -1,13 +1,13 @@
 .login {
   background-color: #f8f8f8;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   display: grid;
   place-items: center;
 }
 
 .login__container {
-  padding: 100px;
+  padding: 50px;
   text-align: center;
   background-color: white;
   border-radius: 10px;

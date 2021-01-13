@@ -59,7 +59,7 @@
 .sidebar__profile {
   display: flex;
   align-items: center;
-  width: 100%;
+  max-width: 240px;
 }
 
 .sidebar__profile > p {
