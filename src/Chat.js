@@ -27,7 +27,7 @@ function Chat() {
     if (roomId) {
       db.collection("rooms")
         .doc(roomId)
-        .onSnapshot((snapshot) => setRoomName(snapshot.data().name));
+        .onSnapshot((snapshot) => setRoomName(snapshot?.data()?.name));
 
       db.collection("rooms")
         .doc(roomId)
@@ -65,7 +65,7 @@ function Chat() {
     try {
       db.collection("rooms").doc(roomId).collection("messages").doc(e).delete();
     } catch {
-      alert("delete Error");
+      alert("Delete Chat Error");
     }
   };
 
@@ -74,9 +74,8 @@ function Chat() {
     try {
       db.collection("rooms").doc(roomId).delete();
       history.push("/");
-      roomId = false;
     } catch {
-      alert("delete Error");
+      alert("Delete Room Error");
     }
   };
 
@@ -121,8 +120,9 @@ function Chat() {
         {messages.map((message) => (
           <>
             <div
-              className={`chat__message ${message.data.name == user.displayName && "chat__reciever"
-                }`}
+              className={`chat__message ${
+                message.data.name == user.displayName && "chat__reciever"
+              }`}
             >
               <span className="chat__name">{message.data.name}</span>
               {message.data.message}
