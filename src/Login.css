@@ -1,17 +1,10 @@
-.login {
-  background-color: #f8f8f8;
-  height: 100%;
-  width: 100%;
-  display: grid;
-  place-items: center;
-}
-
 .login__container {
   padding: 50px;
   text-align: center;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  margin: 20px;
 }
 
 .login__container > img {

@@ -36,6 +36,7 @@
   justify-content: space-between;
   padding: 20px;
   border-right: 1px solid lightgray;
+  min-height: 55px;
 }
 
 .sidebar__headerRight {
