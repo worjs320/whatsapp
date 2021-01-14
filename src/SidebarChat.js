@@ -3,6 +3,7 @@ import "./SidebarChat.css";
 import { Avatar } from "@material-ui/core";
 import db from "./firebase";
 import { Link } from "react-router-dom";
+import { setMaxlengthText } from "./Util";
 
 function SidebarChat({ id, name, addNewChat }) {
   const [seed, setSeed] = useState("");
@@ -39,8 +40,8 @@ function SidebarChat({ id, name, addNewChat }) {
       <div className="sidebarChat">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="sidebarChat__info">
-          <h2>{name}</h2>
-          <p>{messages[0]?.message}</p>
+          <h2>{setMaxlengthText(name)}</h2>
+          <p>{setMaxlengthText(messages[0]?.message)}</p>
         </div>
       </div>
     </Link>
