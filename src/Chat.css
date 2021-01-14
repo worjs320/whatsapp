@@ -63,9 +63,10 @@
 
 .chat__name {
   position: absolute;
-  top: -15px;
+  top: -22px;
   font-weight: 800;
-  font-size: xx-small;
+  left: 15px;
+  font-size: medium;
 }
 
 .chat__headerRight {
@@ -130,4 +131,12 @@
 .chat__subarea {
   display: flex;
   flex-direction: row-reverse;
+}
+
+.chat__avatar {
+  position: absolute;
+  top: -20px;
+  font-weight: 800;
+  font-size: xx-small;
+  left: -20px;
 }

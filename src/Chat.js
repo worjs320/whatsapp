@@ -1,4 +1,4 @@
-import { Avatar, IconButton } from "@material-ui/core";
+import { Avatar, IconButton, makeStyles } from "@material-ui/core";
 import {
   AttachFile,
   MoreVert,
@@ -13,7 +13,8 @@ import { useParams } from "react-router-dom";
 import db from "./firebase";
 import firebase from "firebase";
 import { useStateValue } from "./StateProvider";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
+import { setMaxlengthText } from "./Util";
 
 function Chat() {
   const [{ user }, dispatch] = useStateValue();
@@ -22,8 +23,10 @@ function Chat() {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
+    Notification.requestPermission();
     if (roomId) {
       db.collection("rooms")
         .doc(roomId)
@@ -47,15 +50,27 @@ function Chat() {
     setSeed(Math.floor(Math.random() * 5000));
   }, [roomId]);
 
+  useEffect(() => {
+    setTitle(
+      messages[messages.length - 1]?.data != undefined
+        ? messages[messages.length - 1]?.data?.name +
+            ":" +
+            messages[messages.length - 1]?.data?.message
+        : "WhatsApp"
+    );
+    document.title = title;
+  }, [messages]);
+
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed >>>", input);
-    if (input == '') return;
+    if (input == "") return;
 
     db.collection("rooms").doc(roomId).collection("messages").add({
       name: user.displayName,
       message: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      avatar: user.photoURL,
     });
     setInput("");
     scrollDown();
@@ -72,8 +87,10 @@ function Chat() {
   const history = useHistory();
   const deleteRoom = () => {
     try {
-      db.collection("rooms").doc(roomId).delete();
-      history.push("/");
+      if (window.confirm("Are you sure delete room?")) {
+        db.collection("rooms").doc(roomId).delete();
+        history.push("/");
+      }
     } catch {
       alert("Delete Room Error");
     }
@@ -84,18 +101,21 @@ function Chat() {
     setTimeout(() => (objDiv.scrollTop = objDiv.scrollHeight), 500);
   };
 
+  const useStyles = makeStyles((theme) => ({
+    iconSize: {
+      width: theme.spacing(4),
+      height: theme.spacing(4),
+    },
+  }));
+
+  const classes = useStyles();
+
   return (
     <div className="chat">
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
-          <h2 style={{ display: "inline" }}>{roomName}</h2>
-          <span style={{ marginLeft: "10px" }}>
-            <HighlightOff
-              onClick={() => deleteRoom()}
-              style={{ fontSize: 20, color: "#D11A2A" }}
-            />
-          </span>
+          <h2 style={{ display: "inline" }}>{setMaxlengthText(roomName)}</h2>
           <p>
             Last seen{" "}
             {new Date(
@@ -108,7 +128,7 @@ function Chat() {
             <SearchOutlined />
           </IconButton>
           <IconButton>
-            <AttachFile />
+            <HighlightOff onClick={() => deleteRoom()} />
           </IconButton>
           <IconButton>
             <MoreVert />
@@ -124,6 +144,12 @@ function Chat() {
                 message.data.name == user.displayName && "chat__reciever"
               }`}
             >
+              <span className="chat__avatar">
+                <Avatar
+                  src={message.data.avatar}
+                  className={classes.iconSize}
+                />
+              </span>
               <span className="chat__name">{message.data.name}</span>
               {message.data.message}
               <span className="chat__subarea">
@@ -131,14 +157,16 @@ function Chat() {
                   <br />
                   {new Date(message.data.timestamp?.toDate()).toLocaleString()}
                 </span>
-                <span className="chat__deleteButton">
-                  <IconButton onClick={() => deleteMessage(message.id)}>
-                    <HighlightOff
-                      onClick={() => deleteMessage(message.id)}
-                      style={{ fontSize: 20, color: "#D11A2A" }}
-                    />
-                  </IconButton>
-                </span>
+                {message.data.name == user.displayName && (
+                  <span className="chat__deleteButton">
+                    <IconButton>
+                      <HighlightOff
+                        onClick={() => deleteMessage(message.id)}
+                        style={{ fontSize: 20, color: "#D11A2A" }}
+                      />
+                    </IconButton>
+                  </span>
+                )}
               </span>
             </div>
           </>
