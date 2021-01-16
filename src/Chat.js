@@ -1,10 +1,5 @@
 import { Avatar, IconButton, makeStyles } from "@material-ui/core";
-import {
-  AttachFile,
-  MoreVert,
-  SearchOutlined,
-  HighlightOff,
-} from "@material-ui/icons";
+import { MoreVert, SearchOutlined, HighlightOff } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
@@ -15,6 +10,7 @@ import firebase from "firebase";
 import { useStateValue } from "./StateProvider";
 import { useHistory } from "react-router-dom";
 import { setMaxlengthText } from "./Util";
+import { usePageVisibility } from "react-page-visibility";
 
 function Chat() {
   const [{ user }, dispatch] = useStateValue();
@@ -23,7 +19,7 @@ function Chat() {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
-  const [title, setTitle] = useState("");
+  const isVisible = usePageVisibility();
 
   useEffect(() => {
     Notification.requestPermission();
@@ -51,19 +47,49 @@ function Chat() {
   }, [roomId]);
 
   useEffect(() => {
-    setTitle(
-      messages[messages.length - 1]?.data != undefined
-        ? messages[messages.length - 1]?.data?.name +
-            ":" +
-            messages[messages.length - 1]?.data?.message
-        : "WhatsApp"
-    );
-    document.title = title;
+    if (!isVisible) {
+      if (Notification.permission !== "granted") {
+        alert("Notification is disabled");
+      } else {
+        var notification = new Notification("WhatsApp", {
+          title: "fuck",
+          icon:
+            "https://i.pinimg.com/originals/79/dc/31/79dc31280371b8ffbe56ec656418e122.png",
+          body:
+            messages[messages.length - 1]?.data?.name +
+            " : " +
+            messages[messages.length - 1]?.data?.message,
+        });
+
+        notification.onclick = function () {
+          window.open("http://google.com");
+        };
+      }
+      repeatMessage(
+        messages[messages.length - 1]?.data?.name,
+        messages[messages.length - 1]?.data?.message
+      );
+    }
   }, [messages]);
+
+  const _sleep = (delay) =>
+    new Promise((resolve) => setTimeout(resolve, delay));
+
+  const repeatMessage = async (name, message) => {
+    for (let i = 0; i < 3; i++) {
+      if (isVisible) {
+        document.title = "WhatsApp";
+        break;
+      }
+      document.title = name + " : " + message;
+      await _sleep(500);
+      document.title = "🔔" + name + "님의 새 메시지";
+      await _sleep(500);
+    }
+  };
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log("You typed >>>", input);
     if (input == "") return;
 
     db.collection("rooms").doc(roomId).collection("messages").add({
@@ -74,6 +100,7 @@ function Chat() {
     });
     setInput("");
     scrollDown();
+    document.title = "WhatsApp";
   };
 
   const deleteMessage = (e) => {

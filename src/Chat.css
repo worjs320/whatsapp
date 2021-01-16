@@ -121,11 +121,10 @@
 }
 
 .chat__deleteButton {
-  margin-left: 10px;
   font-size: xx-small;
   position: absolute;
-  margin-right: -50px;
   bottom: -8px;
+  right: -35px;
 }
 
 .chat__subarea {
