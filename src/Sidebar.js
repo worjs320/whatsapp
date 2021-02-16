@@ -4,6 +4,7 @@ import DonutLargeIcon from "@material-ui/icons/DonutLarge";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { SearchOutlined } from "@material-ui/icons";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import "./Sidebar.css";
 import SidebarChat from "./SidebarChat";
 import db from "./firebase";
@@ -29,6 +30,13 @@ function Sidebar() {
     };
   }, []);
 
+  const logout = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("user");
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar__header">
@@ -44,7 +52,7 @@ function Sidebar() {
             <MoreVertIcon fontSize="small" />
           </IconButton>
           <IconButton>
-            <ChatIcon fontSize="small" />
+            <ExitToAppIcon fontSize="small" onClick={logout} />
           </IconButton>
         </div>
       </div>
